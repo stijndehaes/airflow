@@ -88,6 +88,72 @@ def test_new_schedule_interval_next_info_starts_at_new_time(
     assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
 
 
+def test_new_bla():
+    timezone = "Europe/Brussels"
+    tz = pendulum.tz.timezone(timezone)
+    start = pendulum.DateTime(2023, 10, 29, hour=5, minute=50, tzinfo=tz)
+    end = pendulum.DateTime(2023, 10, 29, hour=6, minute=50, tzinfo=tz)
+    interval = DataInterval(start=start, end=end)
+    table = CronDataIntervalTimetable("50 5-11,13-23 * * *", timezone)
+    next_info = table.next_dagrun_info(last_automated_data_interval=interval, restriction=TimeRestriction(earliest=None, latest=None, catchup=True))
+    expected_start = end
+    expected_end = end + datetime.timedelta(hours=1)
+    assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
+
+
+def test_new_bla33():
+    timezone = "Europe/Brussels"
+    tz = pendulum.tz.timezone(timezone)
+    start = pendulum.DateTime(2023, 10, 28, hour=22, minute=50, tzinfo=tz)
+    end = pendulum.DateTime(2023, 10, 28, hour=23, minute=50, tzinfo=tz)
+    interval = DataInterval(start=start, end=end)
+    table = CronDataIntervalTimetable("50 5-11,13-23 * * *", timezone)
+    next_info = table.next_dagrun_info(last_automated_data_interval=interval, restriction=TimeRestriction(earliest=None, latest=None, catchup=True))
+    expected_start = end
+    expected_end = pendulum.DateTime(2023, 10, 29, hour=4, minute=50, tzinfo=tz)
+    assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
+
+
+def test_new_bla44():
+    timezone = "Europe/Brussels"
+    tz = pendulum.tz.timezone(timezone)
+    start = pendulum.DateTime(2023, 10, 28, hour=23, minute=50, tzinfo=tz)
+    end = pendulum.DateTime(2023, 10, 29, hour=4, minute=50, tzinfo=tz)
+    interval = DataInterval(start=start, end=end)
+    table = CronDataIntervalTimetable("50 5-11,13-23 * * *", timezone)
+    next_info = table.next_dagrun_info(last_automated_data_interval=interval, restriction=TimeRestriction(earliest=None, latest=None, catchup=True))
+    expected_start = end
+    expected_end = pendulum.DateTime(2023, 10, 29, hour=5, minute=50, tzinfo=tz)
+    assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
+
+
+#THIS IS THE BUGGY WEIRD THING
+def test_new_bla55():
+    timezone = "Europe/Brussels"
+    tz = pendulum.tz.timezone(timezone)
+    start = pendulum.DateTime(2023, 10, 29, hour=4, minute=50, tzinfo=tz)
+    end = pendulum.DateTime(2023, 10, 29, hour=5, minute=50, tzinfo=tz)
+    interval = DataInterval(start=start, end=end)
+    table = CronDataIntervalTimetable("50 5-11,13-23 * * *", timezone)
+    next_info = table.next_dagrun_info(last_automated_data_interval=interval, restriction=TimeRestriction(earliest=None, latest=None, catchup=True))
+    expected_start = end
+    expected_end = pendulum.DateTime(2023, 10, 29, hour=6, minute=50, tzinfo=tz)
+    assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
+
+
+def test_new_bla2():
+    timezone = "Europe/Brussels"
+    tz = pendulum.tz.timezone(timezone)
+    start = pendulum.DateTime(2023, 11, 29, hour=5, minute=50, tzinfo=tz)
+    end = pendulum.DateTime(2023, 11, 29, hour=6, minute=50, tzinfo=tz)
+    interval = DataInterval(start=start, end=end)
+    table = CronDataIntervalTimetable("50 5-11,13-23 * * *", timezone)
+    next_info = table.next_dagrun_info(last_automated_data_interval=interval, restriction=TimeRestriction(earliest=None, latest=None, catchup=True))
+    expected_start = end
+    expected_end = end + datetime.timedelta(hours=1)
+    assert next_info == DagRunInfo.interval(start=expected_start, end=expected_end)
+
+
 @pytest.mark.parametrize(
     "timetable",
     [
